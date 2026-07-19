@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Gateway - ParkVision</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0a0f;
+      --card-bg: rgba(20, 20, 28, 0.6);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-glow: rgba(59, 130, 246, 0.5);
+      --input-bg: rgba(0, 0, 0, 0.2);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Background Glows */
+    body::before, body::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: -1;
+      opacity: 0.15;
+    }
+    body::before {
+      top: -100px;
+      left: -100px;
+      background: var(--primary);
+    }
+    body::after {
+      bottom: -100px;
+      right: -100px;
+      background: #8b5cf6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      animation: fadeUp 0.6s ease-out;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .breadcrumb span.active {
+      color: var(--text-main);
+      font-weight: 500;
+    }
+    .breadcrumb svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.5;
+    }
+
+    /* Form Card */
+    .form-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    h2.section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      margin-top: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2.section-title:first-child { margin-top: 0; }
+    
+    .divider {
+      height: 1px;
+      background: var(--card-border);
+      margin: 32px 0;
+    }
+
+    /* Form Groups */
+    .form-group {
+      margin-bottom: 24px;
+    }
+    .form-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+    .form-label .required { color: var(--danger); }
+    .info-icon {
+      width: 14px;
+      height: 14px;
+      color: var(--text-muted);
+      cursor: help;
+      transition: color 0.2s;
+    }
+    .info-icon:hover { color: var(--primary); }
+
+    /* Inputs */
+    .input-control {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      color: var(--text-main);
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .input-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+      background: rgba(0, 0, 0, 0.4);
+    }
+    
+    select.input-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      background-size: 16px;
+      padding-right: 48px;
+    }
+
+    /* Gateway EUI Special Input */
+    .eui-wrapper {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .eui-input {
+      display: flex;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      gap: 8px;
+      font-family: monospace;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+    }
+    .eui-input span { color: var(--text-main); }
+    
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      color: white;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+      padding: 14px 32px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      width: 100%;
+    }
+    .btn-primary:hover {
+      box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
+      transform: translateY(-2px);
+    }
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+    }
+
+    /* Checkboxes */
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+    .checkbox-group input {
+      display: none;
+    }
+    .checkbox-custom {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--text-muted);
+      border-radius: 6px;
+      position: relative;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .checkbox-group input:checked + .checkbox-custom {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .checkbox-group input:checked + .checkbox-custom::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 2px;
+      width: 4px;
+      height: 9px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+    .checkbox-label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .checkbox-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+    .checkbox-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .checkbox-desc a {
+      color: var(--text-main);
+      text-decoration: none;
+      border-bottom: 1px dashed var(--text-muted);
+    }
+    
+    .hint-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <span>Gateways</span>
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      <span class="active">Register gateway</span>
+    </div>
+
+    <!-- Main Form -->
+    <div class="form-card">
+      
+      <!-- EUI -->
+      <div class="form-group">
+        <label class="form-label">
+          Gateway EUI 
+          <svg class="info-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </label>
+        <div class="eui-wrapper">
+          <div class="eui-input">
+            <span>2C</span> <span>F7</span> <span>F1</span> <span>10</span> <span>80</span> <span>10</span> <span>02</span> <span>BD</span>
+          </div>
+          <button class="btn btn-secondary btn-sm">Reset</button>
+        </div>
+      </div>
+
+      <!-- ID -->
+      <div class="form-group">
+        <label class="form-label">
+          Gateway ID <span class="required">*</span>
+          <svg class="info-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </label>
+        <input type="text" class="input-control" value="devang-parkvision-19">
+      </div>
+
+      <!-- Name -->
+      <div class="form-group">
+        <label class="form-label">
+          Gateway name
+          <svg class="info-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </label>
+        <input type="text" class="input-control" value="Devang_LoWan_ParkVision">
+      </div>
+
+      <!-- Frequency -->
+      <div class="form-group">
+        <label class="form-label">
+          Frequency plan <span class="required">*</span>
+          <svg class="info-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </label>
+        <select class="input-control">
+          <option>India 865-867 MHz</option>
+          <option>Europe 868 MHz</option>
+          <option>US 915 MHz</option>
+        </select>
+        <div style="margin-top: 12px;">
+          <button class="btn btn-secondary btn-sm">
+            <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+            Add frequency plan
+          </button>
+        </div>
+        <div class="hint-text">Note: most gateways use a single frequency plan. Some 16 and 64 channel gateways however allow setting multiple within the same band.</div>
+      </div>
+
+      <!-- Auth Checkbox -->
+      <div class="form-group" style="margin-top: 32px;">
+        <label class="checkbox-group">
+          <input type="checkbox">
+          <div class="checkbox-custom"></div>
+          <div class="checkbox-label">
+            <span class="checkbox-title">Require authenticated connection</span>
+            <span class="checkbox-desc">Choose this option eg. if your gateway is powered by <a href="#">LoRa Basic Station</a></span>
+          </div>
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Share Settings -->
+      <h2 class="section-title">Share gateway information</h2>
+      <div class="hint-text" style="margin-top: -16px; margin-bottom: 20px;">
+        Select which information can be seen by other network participants, including <a href="#" style="color: var(--text-main);">Packet Broker</a>
+      </div>
+      
+      <label class="checkbox-group">
+        <input type="checkbox" checked>
+        <div class="checkbox-custom"></div>
+        <div class="checkbox-label">
+          <span class="checkbox-title" style="display: flex; align-items: center; gap: 6px;">
+            Share status within network
+            <svg class="info-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </span>
+        </div>
+      </label>
+
+      <label class="checkbox-group">
+        <input type="checkbox" checked>
+        <div class="checkbox-custom"></div>
+        <div class="checkbox-label">
+          <span class="checkbox-title" style="display: flex; align-items: center; gap: 6px;">
+            Share location within network
+            <svg class="info-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </span>
+        </div>
+      </label>
+
+      <div class="divider"></div>
+
+      <!-- Gateway properties -->
+      <h2 class="section-title">Gateway properties</h2>
+      <div class="form-group">
+        <label class="form-label">Labels</label>
+        <select class="input-control" style="color: var(--text-muted);">
+          <option>Select...</option>
+        </select>
+        <div class="hint-text" style="margin-top: 8px;">
+          Add a label or <a href="#" style="color: var(--text-main);">create one</a> to categorize your gateways
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Submit Action -->
+    <div style="margin-top: 32px; display: flex; justify-content: flex-start;">
+      <button class="btn btn-primary" style="width: auto;">
+        Register gateway
+      </button>
+    </div>
+
+  </div>
+
+</body>
+</html>

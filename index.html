@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CarPool — Ride Together, Save Together</title>
+  <meta name="description" content="Enterprise Carpooling Platform — Find rides, offer rides, track journeys and manage payments seamlessly." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Icons -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%233B82F6'/%3E%3Cpath d='M20 60 L20 40 Q20 30 30 30 L70 30 Q80 30 80 40 L80 60' stroke='white' stroke-width='6' fill='none'/%3E%3Crect x='15' y='60' width='70' height='15' rx='5' fill='white'/%3E%3Ccircle cx='30' cy='85' r='8' fill='white'/%3E%3Ccircle cx='70' cy='85' r='8' fill='white'/%3E%3C/svg%3E" />
+  <!-- Razorpay SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- Mappls (MapMyIndia) Maps SDK — REST/Map SDK Key: de4518f234493b9d11f7647b2dc89daa -->
+  <link rel="stylesheet" href="https://apis.mappls.com/advancedmaps/api/de4518f234493b9d11f7647b2dc89daa/map_sdk_plugins?v=3.0" />
+  <script src="https://apis.mappls.com/advancedmaps/api/de4518f234493b9d11f7647b2dc89daa/map_sdk?layer=vector&v=3.0" defer></script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     SPLASH SCREEN
+═══════════════════════════════════════ -->
+<div id="page-splash" class="page page-auth active">
+  <div class="splash-container">
+    <div class="splash-logo-wrap">
+      <div class="splash-logo-icon">
+        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+          <rect width="64" height="64" rx="20" fill="url(#splashGrad)"/>
+          <path d="M10 40 L10 32 Q10 26 16 26 L48 26 Q54 26 54 32 L54 40" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <rect x="8" y="38" width="48" height="10" rx="5" fill="white" fill-opacity="0.9"/>
+          <circle cx="19" cy="52" r="5" fill="white"/>
+          <circle cx="45" cy="52" r="5" fill="white"/>
+          <path d="M20 26 L24 14 L40 14 L44 26" stroke="white" stroke-width="2" fill="none" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="splashGrad" x1="0" y1="0" x2="64" y2="64">
+              <stop offset="0%" stop-color="#2563EB"/>
+              <stop offset="100%" stop-color="#7C3AED"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="splash-logo-text">
+        <span class="splash-brand">CarPool</span>
+        <span class="splash-tagline">Enterprise</span>
+      </div>
+    </div>
+    <div class="splash-motto">
+      <h1>Ride Together,</h1>
+      <h1 class="gradient-text">Save Together</h1>
+    </div>
+    <div class="splash-progress">
+      <div class="splash-progress-bar"></div>
+    </div>
+    <p class="splash-sub">Smart commuting for modern workplaces</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     LOGIN PAGE
+═══════════════════════════════════════ -->
+<div id="page-login" class="page page-auth">
+  <div class="auth-bg">
+    <div class="auth-blob blob-1"></div>
+    <div class="auth-blob blob-2"></div>
+  </div>
+  <div class="auth-container">
+    <div class="auth-brand">
+      <div class="brand-icon">
+        <svg width="36" height="36" viewBox="0 0 64 64" fill="none">
+          <rect width="64" height="64" rx="18" fill="url(#loginGrad)"/>
+          <path d="M10 40 L10 32 Q10 26 16 26 L48 26 Q54 26 54 32 L54 40" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <rect x="8" y="38" width="48" height="10" rx="5" fill="white" fill-opacity="0.9"/>
+          <circle cx="19" cy="52" r="5" fill="white"/>
+          <circle cx="45" cy="52" r="5" fill="white"/>
+          <defs>
+            <linearGradient id="loginGrad" x1="0" y1="0" x2="64" y2="64">
+              <stop offset="0%" stop-color="#2563EB"/>
+              <stop offset="100%" stop-color="#7C3AED"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="brand-name">CarPool</span>
+    </div>
+    <div class="auth-card">
+      <h2 class="auth-title">Welcome Back</h2>
+      <p class="auth-sub">Login to your Carpooling account</p>
+      <form id="login-form" class="auth-form">
+        <div class="form-group">
+          <label class="form-label">Email / Mobile</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉</span>
+            <input type="text" id="login-email" class="form-input" placeholder="Enter email or mobile" required autocomplete="email" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="login-password" class="form-input" placeholder="Enter password" required autocomplete="current-password" />
+            <button type="button" class="input-eye" id="login-eye">👁</button>
+          </div>
+        </div>
+        <div id="login-error" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-full btn-lg" id="login-btn">
+          <span>Login</span>
+          <div class="btn-loader hidden"></div>
+        </button>
+      </form>
+      <p class="auth-switch">Don't have an account? <a href="#" id="goto-signup" class="link">Sign Up</a></p>
+      <div class="auth-demo-hint">
+        <span>Demo: admin@carpool.com / admin123</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SIGN UP PAGE
+═══════════════════════════════════════ -->
+<div id="page-signup" class="page page-auth">
+  <div class="auth-bg">
+    <div class="auth-blob blob-1"></div>
+    <div class="auth-blob blob-2"></div>
+  </div>
+  <div class="auth-container">
+    <div class="auth-brand">
+      <div class="brand-icon">
+        <svg width="36" height="36" viewBox="0 0 64 64" fill="none">
+          <rect width="64" height="64" rx="18" fill="url(#signupGrad)"/>
+          <path d="M10 40 L10 32 Q10 26 16 26 L48 26 Q54 26 54 32 L54 40" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <rect x="8" y="38" width="48" height="10" rx="5" fill="white" fill-opacity="0.9"/>
+          <circle cx="19" cy="52" r="5" fill="white"/>
+          <circle cx="45" cy="52" r="5" fill="white"/>
+          <defs>
+            <linearGradient id="signupGrad" x1="0" y1="0" x2="64" y2="64">
+              <stop offset="0%" stop-color="#2563EB"/>
+              <stop offset="100%" stop-color="#7C3AED"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="brand-name">CarPool</span>
+    </div>
+    <div class="auth-card">
+      <h2 class="auth-title">Create Account</h2>
+      <p class="auth-sub">Join your company's carpooling network</p>
+      <form id="signup-form" class="auth-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" id="signup-fname" class="form-input" placeholder="First name" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" id="signup-lname" class="form-input" placeholder="Last name" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="signup-email" class="form-input" placeholder="work@company.com" required autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mobile</label>
+          <input type="tel" id="signup-phone" class="form-input" placeholder="+91 98765 43210" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Organization</label>
+          <select id="signup-org" class="form-input form-select" required>
+            <option value="">Select your organization</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="signup-password" class="form-input" placeholder="Min 6 characters" required autocomplete="new-password" />
+        </div>
+        <div id="signup-error" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-full btn-lg">Create Account</button>
+      </form>
+      <p class="auth-switch">Already have an account? <a href="#" id="goto-login" class="link">Login</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     APP SHELL (post-login)
+═══════════════════════════════════════ -->
+<div id="app-shell" class="hidden">
+
+  <!-- Sidebar Overlay for Mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="brand-icon sm">
+          <svg width="28" height="28" viewBox="0 0 64 64" fill="none">
+            <rect width="64" height="64" rx="18" fill="url(#sideGrad)"/>
+            <path d="M10 40 L10 32 Q10 26 16 26 L48 26 Q54 26 54 32 L54 40" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <rect x="8" y="38" width="48" height="10" rx="5" fill="white" fill-opacity="0.9"/>
+            <circle cx="19" cy="52" r="5" fill="white"/>
+            <circle cx="45" cy="52" r="5" fill="white"/>
+            <defs>
+              <linearGradient id="sideGrad" x1="0" y1="0" x2="64" y2="64">
+                <stop offset="0%" stop-color="#2563EB"/>
+                <stop offset="100%" stop-color="#7C3AED"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span>CarPool</span>
+      </div>
+      <button id="sidebar-toggle" class="sidebar-toggle">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- User Card -->
+    <div class="sidebar-user" id="sidebar-user-card">
+      <div class="user-avatar" id="sidebar-avatar">A</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-user-name">User</div>
+        <div class="user-org" id="sidebar-user-org">Organization</div>
+      </div>
+      <div class="user-wallet-badge" id="sidebar-wallet-badge">₹0</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item" data-page="dashboard" id="nav-dashboard">
+        <span class="nav-icon">⊞</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <div class="nav-section-label">Rides</div>
+      <a href="#" class="nav-item" data-page="find-ride" id="nav-find-ride">
+        <span class="nav-icon">🔍</span>
+        <span class="nav-label">Find a Ride</span>
+      </a>
+      <a href="#" class="nav-item" data-page="offer-ride" id="nav-offer-ride">
+        <span class="nav-icon">🚗</span>
+        <span class="nav-label">Offer a Ride</span>
+      </a>
+      <a href="#" class="nav-item" data-page="my-trips" id="nav-my-trips">
+        <span class="nav-icon">📍</span>
+        <span class="nav-label">My Trips</span>
+        <span class="nav-badge" id="trips-badge" style="display:none">0</span>
+      </a>
+      <div class="nav-section-label">Manage</div>
+      <a href="#" class="nav-item" data-page="my-vehicles" id="nav-my-vehicles">
+        <span class="nav-icon">🚙</span>
+        <span class="nav-label">My Vehicles</span>
+      </a>
+      <a href="#" class="nav-item" data-page="wallet" id="nav-wallet">
+        <span class="nav-icon">💳</span>
+        <span class="nav-label">Wallet</span>
+      </a>
+      <a href="#" class="nav-item" data-page="ride-history" id="nav-history">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Ride History</span>
+      </a>
+      <a href="#" class="nav-item" data-page="reports" id="nav-reports">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Reports</span>
+      </a>
+      <div class="nav-section-label">More</div>
+      <a href="#" class="nav-item" data-page="settings" id="nav-settings">
+        <span class="nav-icon">⚙</span>
+        <span class="nav-label">Settings</span>
+      </a>
+      <a href="#" class="nav-item" id="nav-admin" data-page="admin" style="display:none">
+        <span class="nav-icon">👔</span>
+        <span class="nav-label">Admin Panel</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn btn-ghost btn-full" id="logout-btn">
+        <span>🚪</span>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Mobile Top Bar -->
+  <div class="topbar" id="topbar">
+    <button id="mobile-menu-btn" class="icon-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <span class="topbar-title" id="topbar-title">Dashboard</span>
+    <div class="topbar-right">
+      <button class="icon-btn" id="notif-btn">
+        🔔
+        <span class="notif-dot hidden" id="notif-dot"></span>
+      </button>
+      <div class="user-avatar sm" id="topbar-avatar">A</div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main id="main-content" class="main-content">
+
+    <!-- ─────────────── DASHBOARD ─────────────── -->
+    <div id="page-dashboard" class="page">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title" id="dashboard-greeting">Good Morning! 👋</h1>
+          <p class="page-sub" id="dashboard-sub">Ready for your commute today?</p>
+        </div>
+        <div class="header-actions">
+          <div class="date-badge" id="dashboard-date"></div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <button class="quick-card quick-find" data-page="find-ride">
+          <div class="quick-icon">🔍</div>
+          <div class="quick-info">
+            <div class="quick-title">Find a Ride</div>
+            <div class="quick-desc">Search available rides</div>
+          </div>
+          <div class="quick-arrow">→</div>
+        </button>
+        <button class="quick-card quick-offer" data-page="offer-ride">
+          <div class="quick-icon">🚗</div>
+          <div class="quick-info">
+            <div class="quick-title">Offer a Ride</div>
+            <div class="quick-desc">Share your journey</div>
+          </div>
+          <div class="quick-arrow">→</div>
+        </button>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-grid" id="dashboard-stats">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(37,99,235,0.15);color:#3B82F6">🚗</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-total-trips">0</div>
+            <div class="stat-label">Total Trips</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(16,185,129,0.15);color:#10B981">💰</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-saved">₹0</div>
+            <div class="stat-label">Amount Saved</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(245,158,11,0.15);color:#F59E0B">📍</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-distance">0 km</div>
+            <div class="stat-label">Distance Shared</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(139,92,246,0.15);color:#8B5CF6">🌿</div>
+          <div class="stat-info">
+            <div class="stat-value" id="stat-co2">0 kg</div>
+            <div class="stat-label">CO₂ Saved</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Trip Banner -->
+      <div id="active-trip-banner" class="active-trip-banner hidden">
+        <div class="active-trip-info">
+          <div class="pulse-dot"></div>
+          <div>
+            <div class="active-trip-title">Trip in Progress</div>
+            <div class="active-trip-route" id="active-trip-route">—</div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-primary" id="active-trip-track-btn">Track Live</button>
+      </div>
+
+      <!-- Upcoming Trips -->
+      <div class="section-header">
+        <h2 class="section-title">Upcoming Trips</h2>
+        <a href="#" class="link" data-page="my-trips">View All</a>
+      </div>
+      <div id="upcoming-trips-list" class="trips-list">
+        <div class="empty-state">
+          <div class="empty-icon">🗓</div>
+          <p>No upcoming trips. <a href="#" data-page="find-ride" class="link">Find a ride?</a></p>
+        </div>
+      </div>
+
+      <!-- Available Rides Near You -->
+      <div class="section-header">
+        <h2 class="section-title">Available Rides Today</h2>
+        <a href="#" class="link" data-page="find-ride">See All</a>
+      </div>
+      <div id="dashboard-rides-list" class="rides-row">
+        <div class="empty-state">
+          <div class="empty-icon">🚗</div>
+          <p>No rides available today.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────── FIND A RIDE ─────────────── -->
+    <div id="page-find-ride" class="page">
+      <div class="page-header">
+        <button class="back-btn" data-page="dashboard">←</button>
+        <div>
+          <h1 class="page-title">Find a Ride</h1>
+          <p class="page-sub">Search rides matching your route</p>
+        </div>
+      </div>
+      <div class="form-card">
+        <form id="find-ride-form">
+          <div class="form-group">
+            <label class="form-label">📍 Pickup Location</label>
+            <div class="location-input-wrap">
+              <input type="text" id="find-pickup" class="form-input" placeholder="Enter pickup location" autocomplete="off" required />
+              <div class="location-actions">
+                <button type="button" class="location-action-btn" id="find-pickup-gps" title="Current Location">📍</button>
+                <button type="button" class="location-action-btn" id="find-pickup-map" title="Pick on Map">🗺️</button>
+              </div>
+              <div class="autocomplete-list" id="find-pickup-list"></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">🏁 Destination</label>
+            <div class="location-input-wrap">
+              <input type="text" id="find-destination" class="form-input" placeholder="Enter destination" autocomplete="off" required />
+              <div class="location-actions">
+                <button type="button" class="location-action-btn" id="find-dest-gps" title="Current Location">📍</button>
+                <button type="button" class="location-action-btn" id="find-dest-map" title="Pick on Map">🗺️</button>
+              </div>
+              <div class="autocomplete-list" id="find-destination-list"></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">📅 Travel Date</label>
+              <input type="date" id="find-date" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">🕐 Travel Time</label>
+              <input type="time" id="find-time" class="form-input" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">👥 Seats Needed</label>
+              <div class="counter-input">
+                <button type="button" class="counter-btn" id="find-seats-minus">−</button>
+                <span id="find-seats-val" class="counter-val">1</span>
+                <button type="button" class="counter-btn" id="find-seats-plus">+</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">🔁 Recurring</label>
+              <div class="toggle-wrap">
+                <label class="toggle">
+                  <input type="checkbox" id="find-recurring" />
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label" id="find-recurring-label">One-time</span>
+              </div>
+            </div>
+          </div>
+          <div id="find-recurring-days" class="day-picker hidden">
+            <div class="day-pills">
+              <label class="day-pill"><input type="checkbox" value="Mon"/>Mon</label>
+              <label class="day-pill"><input type="checkbox" value="Tue"/>Tue</label>
+              <label class="day-pill"><input type="checkbox" value="Wed"/>Wed</label>
+              <label class="day-pill"><input type="checkbox" value="Thu"/>Thu</label>
+              <label class="day-pill"><input type="checkbox" value="Fri"/>Fri</label>
+              <label class="day-pill"><input type="checkbox" value="Sat"/>Sat</label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg">
+            <span>Search Rides</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ─────────────── ROUTE CONFIRMATION (FIND) ─────────────── -->
+    <div id="page-route-confirm" class="page">
+      <div class="page-header">
+        <button class="back-btn" id="route-confirm-back">←</button>
+        <div>
+          <h1 class="page-title">Confirm Route</h1>
+          <p class="page-sub">Review your journey route</p>
+        </div>
+      </div>
+      <div class="route-summary-bar">
+        <div class="route-point">
+          <div class="route-dot start"></div>
+          <div class="route-text" id="confirm-pickup-label">Pickup</div>
+        </div>
+        <div class="route-line"></div>
+        <div class="route-point">
+          <div class="route-dot end"></div>
+          <div class="route-text" id="confirm-dest-label">Destination</div>
+        </div>
+      </div>
+      <div class="map-container" id="route-confirm-map"></div>
+      <div class="route-info-card">
+        <div class="route-stat">
+          <div class="route-stat-val" id="confirm-distance">— km</div>
+          <div class="route-stat-label">Distance</div>
+        </div>
+        <div class="route-stat">
+          <div class="route-stat-val" id="confirm-duration">— min</div>
+          <div class="route-stat-label">Duration</div>
+        </div>
+        <div class="route-stat">
+          <div class="route-stat-val" id="confirm-seats">—</div>
+          <div class="route-stat-label">Seats</div>
+        </div>
+      </div>
+      <div class="confirm-actions">
+        <button class="btn btn-ghost" id="route-confirm-back-btn">← Change Route</button>
+        <button class="btn btn-primary btn-lg" id="route-confirm-proceed">Find Rides →</button>
+      </div>
+    </div>
+
+    <!-- ─────────────── AVAILABLE RIDES ─────────────── -->
+    <div id="page-available-rides" class="page">
+      <div class="page-header">
+        <button class="back-btn" data-page="find-ride">←</button>
+        <div>
+          <h1 class="page-title">Available Rides</h1>
+          <p class="page-sub" id="available-rides-sub">Rides matching your route</p>
+        </div>
+      </div>
+      <div class="rides-filter-bar">
+        <button class="filter-pill active" data-filter="all">All</button>
+        <button class="filter-pill" data-filter="cheapest">Cheapest</button>
+        <button class="filter-pill" data-filter="soonest">Soonest</button>
+        <button class="filter-pill" data-filter="seats">Most Seats</button>
+      </div>
+      <div id="available-rides-list" class="ride-cards-list">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Searching for rides...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────── OFFER A RIDE ─────────────── -->
+    <div id="page-offer-ride" class="page">
+      <div class="page-header">
+        <button class="back-btn" data-page="dashboard">←</button>
+        <div>
+          <h1 class="page-title">Offer a Ride</h1>
+          <p class="page-sub">Share your journey with colleagues</p>
+        </div>
+      </div>
+
+      <!-- No vehicle warning -->
+      <div id="offer-no-vehicle-warn" class="alert-card hidden">
+        <div class="alert-icon">🚗</div>
+        <div class="alert-content">
+          <div class="alert-title">No Vehicle Registered</div>
+          <p class="alert-desc">You need to register a vehicle before offering a ride.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" data-page="my-vehicles">Add Vehicle</button>
+      </div>
+
+      <div class="form-card" id="offer-ride-form-wrap">
+        <form id="offer-ride-form">
+          <div class="form-group">
+            <label class="form-label">📍 Pickup Location</label>
+            <div class="location-input-wrap">
+              <input type="text" id="offer-pickup" class="form-input" placeholder="Enter pickup location" autocomplete="off" required />
+              <div class="location-actions">
+                <button type="button" class="location-action-btn" id="offer-pickup-gps" title="Current Location">📍</button>
+                <button type="button" class="location-action-btn" id="offer-pickup-map" title="Pick on Map">🗺️</button>
+              </div>
+              <div class="autocomplete-list" id="offer-pickup-list"></div>
+            </div>
+          </div>
+          
+          <!-- Waypoints Container -->
+          <div id="offer-waypoints-container"></div>
+          <div class="form-group" style="margin-top:-10px">
+            <button type="button" class="btn btn-ghost btn-sm" id="offer-add-waypoint-btn" style="color:var(--primary)">+ Add Stop</button>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">🏁 Destination</label>
+            <div class="location-input-wrap">
+              <input type="text" id="offer-destination" class="form-input" placeholder="Enter destination" autocomplete="off" required />
+              <div class="location-actions">
+                <button type="button" class="location-action-btn" id="offer-dest-gps" title="Current Location">📍</button>
+                <button type="button" class="location-action-btn" id="offer-dest-map" title="Pick on Map">🗺️</button>
+              </div>
+              <div class="autocomplete-list" id="offer-destination-list"></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">📅 Date</label>
+              <input type="date" id="offer-date" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">🕐 Departure Time</label>
+              <input type="time" id="offer-time" class="form-input" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">👥 Available Seats</label>
+              <div class="counter-input">
+                <button type="button" class="counter-btn" id="offer-seats-minus">−</button>
+                <span id="offer-seats-val" class="counter-val">2</span>
+                <button type="button" class="counter-btn" id="offer-seats-plus">+</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">💰 Fare Per Seat (₹)</label>
+              <input type="number" id="offer-fare" class="form-input" placeholder="e.g. 50" min="0" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">🚙 Select Vehicle</label>
+            <select id="offer-vehicle" class="form-input form-select" required>
+              <option value="">Choose vehicle</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg">Preview Route →</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ─────────────── ROUTE CONFIRM (OFFER) ─────────────── -->
+    <div id="page-route-confirm-offer" class="page">
+      <div class="page-header">
+        <button class="back-btn" data-page="offer-ride">←</button>
+        <div>
+          <h1 class="page-title">Confirm Route</h1>
+          <p class="page-sub">Review before publishing</p>
+        </div>
+      </div>
+      <div class="route-summary-bar">
+        <div class="route-point">
+          <div class="route-dot start"></div>
+          <div class="route-text" id="offer-confirm-pickup-label">Pickup</div>
+        </div>
+        <div class="route-line"></div>
+        <div class="route-point">
+          <div class="route-dot end"></div>
+          <div class="route-text" id="offer-confirm-dest-label">Destination</div>
+        </div>
+      </div>
+      <div class="map-container" id="offer-route-confirm-map"></div>
+      <div class="route-info-card">
+        <div class="route-stat">
+          <div class="route-stat-val" id="offer-confirm-distance">— km</div>
+          <div class="route-stat-label">Distance</div>
+        </div>
+        <div class="route-stat">
+          <div class="route-stat-val" id="offer-confirm-duration">— min</div>
+          <div class="route-stat-label">Duration</div>
+        </div>
+        <div class="route-stat">
+          <div class="route-stat-val" id="offer-confirm-fare">₹—</div>
+          <div class="route-stat-label">Fare/Seat</div>
+        </div>
+        <div class="route-stat">
+          <div class="route-stat-val" id="offer-confirm-seats">—</div>
+          <div class="route-stat-label">Seats</div>
+        </div>
+      </div>
+      <div class="confirm-actions">
+        <button class="btn btn-ghost" data-page="offer-ride">← Edit</button>
+        <button class="btn btn-primary btn-lg" id="publish-ride-btn">🚀 Publish Ride</button>
+      </div>
+    </div>
+
+    <!-- ─────────────── MY TRIPS ─────────────── -->
+    <div id="page-my-trips" class="page">
+      <div class="page-header">
+        <h1 class="page-title">My Trips</h1>
+        <div class="header-actions">
+          <div class="tabs" id="trips-tabs">
+            <button class="tab active" data-tab="upcoming">Upcoming</button>
+            <button class="tab" data-tab="active">Active</button>
+            <button class="tab" data-tab="completed">Completed</button>
+          </div>
+        </div>
+      </div>
+      <div id="my-trips-list" class="trips-list">
+        <div class="empty-state">
+          <div class="empty-icon">🚗</div>
+          <p>No trips yet. <a href="#" data-page="find-ride" class="link">Find a ride?</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────── TRIP DETAIL ─────────────── -->
+    <div id="page-trip-detail" class="page">
+      <div class="page-header">
+        <button class="back-btn" data-page="my-trips">←</button>
+        <h1 class="page-title">Trip Details</h1>
+      </div>
+      <div id="trip-detail-content">
+        <!-- populated dynamically -->
+      </div>
+    </div>
+
+    <!-- ─────────────── LIVE TRACKING ─────────────── -->
+    <div id="page-live-tracking" class="page page-map-full">
+      <div class="tracking-header">
+        <button class="back-btn light" data-page="trip-detail">←</button>
+        <div class="tracking-title">
+          <div class="pulse-dot"></div>
+          <span>Live Tracking</span>
+        </div>
+        <div class="tracking-eta" id="tracking-eta">ETA: —</div>
+      </div>
+      <div class="tracking-map-container" id="live-tracking-map"></div>
+      <div class="tracking-bottom-sheet">
+        <div class="tracking-route-info">
+          <div class="tracking-point">
+            <div class="route-dot start sm"></div>
+            <div id="tracking-pickup-label" class="tracking-label">Pickup</div>
+          </div>
+          <div class="tracking-route-progress">
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="tracking-progress" style="width:5%"></div>
+            </div>
+          </div>
+          <div class="tracking-point">
+            <div class="route-dot end sm"></div>
+            <div id="tracking-dest-label" class="tracking-label">Destination</div>
+          </div>
+        </div>
+        <div class="tracking-info-row">
+          <div class="tracking-info-item">
+            <div class="tracking-info-val" id="tracking-distance-left">— km</div>
+            <div class="tracking-info-label">Remaining</div>
+          </div>
+          <div class="tracking-info-item">
+            <div class="tracking-info-val" id="tracking-speed">— km/h</div>
+            <div class="tracking-info-label">Speed</div>
+          </div>
+          <div class="tracking-info-item">
+            <div class="tracking-info-val" id="tracking-status-label">Scheduled</div>
+            <div class="tracking-info-label">Status</div>
+          </div>
+        </div>
+        <div class="tracking-driver-card" id="tracking-driver-card">
+          <!-- populated dynamically -->
+        </div>
+        <div class="tracking-actions">
+          <button class="btn btn-ghost btn-sm" id="tracking-chat-btn">💬 Chat</button>
+          <button class="btn btn-ghost btn-sm" id="tracking-call-btn">📞 Call</button>
+          <button class="btn btn-primary btn-sm" id="tracking-start-btn" style="display:none">▶ Start Trip</button>
+          <button class="btn btn-danger btn-sm" id="tracking-end-btn" style="display:none">■ End Trip</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────── PAYMENT ─────────────── -->
+    <div id="page-payment" class="page">
+      <div class="page-header">
+        <button class="back-btn" data-page="trip-detail">←</button>
+        <h1 class="page-title">Payment</h1>
+      </div>
+      <div class="payment-amount-card">
+        <div class="payment-label">Amount to Pay</div>
+        <div class="payment-amount" id="payment-amount">₹0</div>
+        <div class="payment-trip-info" id="payment-trip-info">—</div>
+      </div>
+      <div class="payment-methods">
+        <h3 class="section-title" style="margin-bottom:16px">Payment Method</h3>
+        <div class="payment-method-grid">
+          <label class="payment-method-card" for="pm-cash">
+            <input type="radio" name="payment-method" id="pm-cash" value="cash" checked />
+            <div class="pm-icon">💵</div>
+            <div class="pm-label">Cash</div>
+          </label>
+          <label class="payment-method-card" for="pm-card">
+            <input type="radio" name="payment-method" id="pm-card" value="card" />
+            <div class="pm-icon">💳</div>
+            <div class="pm-label">Card</div>
+          </label>
+          <label class="payment-method-card" for="pm-upi">
+            <input type="radio" name="payment-method" id="pm-upi" value="upi" />
+            <div class="pm-icon">📱</div>
+            <div class="pm-label">UPI</div>
+          </label>
+          <label class="payment-method-card" for="pm-wallet">
+            <input type="radio" name="payment-method" id="pm-wallet" value="wallet" />
+            <div class="pm-icon">👛</div>
+            <div class="pm-label">Wallet</div>
+          </label>
+        </div>
+        <!-- UPI Details -->
+        <div id="upi-section" class="payment-extra hidden">
+          <div class="upi-qr-wrap">
+            <canvas id="upi-qr-canvas" width="160" height="160"></canvas>
+          </div>
+          <input type="text" id="upi-id" class="form-input" placeholder="Enter UPI ID" style="margin-top:12px" />
+        </div>
+        <!-- Wallet Balance -->
+        <div id="wallet-section" class="payment-extra hidden">
+          <div class="wallet-balance-info">
+            <span>Wallet Balance</span>
+            <strong id="payment-wallet-balance">₹0</strong>
+          </div>
+          <div class="wallet-insufficient hidden" id="wallet-insufficient">
+            Insufficient balance. <a href="#" data-page="wallet" class="link">Recharge wallet</a>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" id="pay-now-btn">Pay Now</button>
+    </div>
+
+    <!-- ─────────────── WALLET ─────────────── -->
+    <div id="page-wallet" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Wallet</h1>
+      </div>
+      <div class="wallet-balance-card">
+        <div class="wallet-balance-label">Available Balance</div>
+        <div class="wallet-balance-amount" id="wallet-balance">₹0.00</div>
+        <div class="wallet-card-number">CarPool Wallet • <span id="wallet-user-name">User</span></div>
+        <button class="btn btn-white" id="recharge-wallet-btn">+ Add Money</button>
+      </div>
+      <div class="recharge-section">
+        <h3 class="section-title">Add Money to Wallet</h3>
+        <div class="recharge-amounts">
+          <button class="amount-pill" data-amount="100">₹100</button>
+          <button class="amount-pill" data-amount="200">₹200</button>
+          <button class="amount-pill" data-amount="500">₹500</button>
+          <button class="amount-pill" data-amount="1000">₹1000</button>
+        </div>
+        <div class="form-row" style="margin-top:16px;align-items:center;gap:12px">
+          <div class="form-group" style="flex:1;margin:0">
+            <input type="number" id="custom-recharge-amount" class="form-input" placeholder="Custom amount (₹)" min="10" />
+          </div>
+          <button class="btn btn-primary" id="recharge-btn">Recharge</button>
+        </div>
+      </div>
+      <div class="section-header" style="margin-top:32px">
+        <h3 class="section-title">Transaction History</h3>
+      </div>
+      <div id="wallet-transactions" class="transaction-list">
+        <div class="empty-state"><p>No transactions yet.</p></div>
+      </div>
+    </div>
+
+    <!-- ─────────────── RIDE HISTORY ─────────────── -->
+    <div id="page-ride-history" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Ride History</h1>
+        <div class="header-actions">
+          <select id="history-filter" class="form-input form-select" style="width:auto">
+            <option value="all">All Rides</option>
+            <option value="as-driver">As Driver</option>
+            <option value="as-passenger">As Passenger</option>
+          </select>
+        </div>
+      </div>
+      <div id="ride-history-list" class="trips-list">
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <p>No completed rides yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────── MY VEHICLES ─────────────── -->
+    <div id="page-my-vehicles" class="page">
+      <div class="page-header">
+        <h1 class="page-title">My Vehicles</h1>
+        <button class="btn btn-primary btn-sm" id="add-vehicle-btn">+ Add Vehicle</button>
+      </div>
+      <div id="vehicles-list" class="vehicles-grid">
+        <div class="empty-state">
+          <div class="empty-icon">🚗</div>
+          <p>No vehicles registered. Add one to offer rides!</p>
+        </div>
+      </div>
+
+      <!-- Add/Edit Vehicle Modal -->
+      <div id="vehicle-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3 id="vehicle-modal-title">Add Vehicle</h3>
+            <button class="modal-close" id="vehicle-modal-close">✕</button>
+          </div>
+          <form id="vehicle-form">
+            <input type="hidden" id="vehicle-id-input" />
+            <div class="form-group">
+              <label class="form-label">Vehicle Make & Model</label>
+              <input type="text" id="vehicle-model" class="form-input" placeholder="e.g. Honda City, Maruti Swift" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Registration Number</label>
+              <input type="text" id="vehicle-reg" class="form-input" placeholder="e.g. MH 01 AB 1234" required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Seating Capacity</label>
+                <select id="vehicle-capacity" class="form-input form-select" required>
+                  <option value="2">2 Seats</option>
+                  <option value="4" selected>4 Seats</option>
+                  <option value="5">5 Seats</option>
+                  <option value="6">6 Seats</option>
+                  <option value="7">7 Seats</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Color</label>
+                <input type="text" id="vehicle-color" class="form-input" placeholder="e.g. White" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Year</label>
+              <input type="number" id="vehicle-year" class="form-input" placeholder="e.g. 2022" min="2000" max="2026" />
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn btn-ghost" id="vehicle-modal-cancel">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Vehicle</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────── REPORTS ─────────────── -->
+    <div id="page-reports" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Reports & Analytics</h1>
+        <select id="reports-period" class="form-input form-select" style="width:auto">
+          <option value="7">Last 7 Days</option>
+          <option value="30" selected>Last 30 Days</option>
+          <option value="90">Last 90 Days</option>
+          <option value="365">This Year</option>
+        </select>
+      </div>
+      <div class="reports-stats-grid" id="reports-stats">
+        <div class="report-stat-card">
+          <div class="report-stat-icon">🚗</div>
+          <div class="report-stat-val" id="report-total-trips">0</div>
+          <div class="report-stat-label">Total Trips</div>
+        </div>
+        <div class="report-stat-card">
+          <div class="report-stat-icon">📍</div>
+          <div class="report-stat-val" id="report-total-km">0 km</div>
+          <div class="report-stat-label">Distance Travelled</div>
+        </div>
+        <div class="report-stat-card">
+          <div class="report-stat-icon">⛽</div>
+          <div class="report-stat-val" id="report-fuel">0 L</div>
+          <div class="report-stat-label">Fuel Consumed</div>
+        </div>
+        <div class="report-stat-card">
+          <div class="report-stat-icon">💰</div>
+          <div class="report-stat-val" id="report-cost-km">₹0/km</div>
+          <div class="report-stat-label">Cost Per KM</div>
+        </div>
+        <div class="report-stat-card">
+          <div class="report-stat-icon">💸</div>
+          <div class="report-stat-val" id="report-saved">₹0</div>
+          <div class="report-stat-label">Total Saved</div>
+        </div>
+        <div class="report-stat-card">
+          <div class="report-stat-icon">🌿</div>
+          <div class="report-stat-val" id="report-co2">0 kg</div>
+          <div class="report-stat-label">CO₂ Avoided</div>
+        </div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-card-title">Trips Over Time</div>
+          <canvas id="trips-chart" height="200"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Cost Analysis</div>
+          <canvas id="cost-chart" height="200"></canvas>
+        </div>
+        <div class="chart-card chart-wide">
+          <div class="chart-card-title">Fuel Efficiency Trends</div>
+          <canvas id="fuel-chart" height="160"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Vehicle-wise Trips</div>
+          <canvas id="vehicle-chart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────── SETTINGS ─────────────── -->
+    <div id="page-settings" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Settings</h1>
+      </div>
+
+      <!-- Profile Section -->
+      <div class="settings-section">
+        <h3 class="settings-section-title">My Profile</h3>
+        <div class="profile-edit-card">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar-lg" id="settings-avatar">A</div>
+            <button class="avatar-edit-btn">Edit</button>
+          </div>
+          <form id="profile-form" class="profile-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input type="text" id="profile-fname" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" id="profile-lname" class="form-input" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input type="tel" id="profile-phone" class="form-input" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Save Profile</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Saved Places -->
+      <div class="settings-section">
+        <div class="settings-section-header">
+          <h3 class="settings-section-title">Saved Places</h3>
+          <button class="btn btn-sm btn-ghost" id="add-saved-place-btn">+ Add</button>
+        </div>
+        <div id="saved-places-list" class="saved-places-list">
+          <div class="empty-state"><p>No saved places yet.</p></div>
+        </div>
+        <!-- Add saved place modal -->
+        <div id="saved-place-modal" class="modal-overlay hidden">
+          <div class="modal-card">
+            <div class="modal-header">
+              <h3>Save a Place</h3>
+              <button class="modal-close" id="saved-place-modal-close">✕</button>
+            </div>
+            <form id="saved-place-form">
+              <div class="form-group">
+                <label class="form-label">Label</label>
+                <select id="saved-place-label" class="form-input form-select">
+                  <option value="Home">🏠 Home</option>
+                  <option value="Office">🏢 Office</option>
+                  <option value="Other">📍 Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Location</label>
+                <div class="location-input-wrap">
+                  <input type="text" id="saved-place-location" class="form-input" placeholder="Search location" autocomplete="off" />
+                  <div class="autocomplete-list" id="saved-place-list"></div>
+                </div>
+              </div>
+              <div class="modal-actions">
+                <button type="button" class="btn btn-ghost" id="saved-place-modal-cancel">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Access -->
+      <div class="settings-section">
+        <h3 class="settings-section-title">Quick Access</h3>
+        <div class="settings-links">
+          <a href="#" class="settings-link-item" data-page="my-trips">
+            <span class="settings-link-icon">📍</span>
+            <span>My Trips</span>
+            <span class="settings-link-arrow">→</span>
+          </a>
+          <a href="#" class="settings-link-item" data-page="my-vehicles">
+            <span class="settings-link-icon">🚙</span>
+            <span>My Vehicles</span>
+            <span class="settings-link-arrow">→</span>
+          </a>
+          <a href="#" class="settings-link-item" data-page="wallet">
+            <span class="settings-link-icon">💳</span>
+            <span>Payment Methods & Wallet</span>
+            <span class="settings-link-arrow">→</span>
+          </a>
+          <a href="#" class="settings-link-item" data-page="ride-history">
+            <span class="settings-link-icon">📋</span>
+            <span>Ride History</span>
+            <span class="settings-link-arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Help & Support -->
+      <div class="settings-section">
+        <h3 class="settings-section-title">Help & Support</h3>
+        <div class="accordion" id="help-accordion">
+          <div class="accordion-item">
+            <button class="accordion-header">How do I book a ride?</button>
+            <div class="accordion-body">Go to Find a Ride, enter your pickup and destination, select a matching ride and confirm booking.</div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">How does live tracking work?</button>
+            <div class="accordion-body">Once the driver starts the trip, both driver and passengers can see the live location on an interactive map. Tracking auto-terminates per passenger on arrival.</div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">How do I add money to my wallet?</button>
+            <div class="accordion-body">Go to Wallet section, choose an amount or enter a custom amount, and complete the Razorpay payment.</div>
+          </div>
+          <div class="accordion-item">
+            <button class="accordion-header">Can I cancel a ride?</button>
+            <div class="accordion-body">Yes, go to My Trips, select the trip and tap Cancel. Cancellations before 1 hour of departure incur no charge.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- App Settings -->
+      <div class="settings-section">
+        <h3 class="settings-section-title">App Settings</h3>
+        <div class="settings-toggle-list">
+          <div class="settings-toggle-item">
+            <div>
+              <div class="settings-toggle-title">Push Notifications</div>
+              <div class="settings-toggle-desc">Get alerts for ride updates</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="notif-toggle" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-toggle-item">
+            <div>
+              <div class="settings-toggle-title">Location Sharing</div>
+              <div class="settings-toggle-desc">Share live location during trips</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="location-toggle" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────── ADMIN PANEL ─────────────── -->
+    <div id="page-admin" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Admin Panel</h1>
+        <div class="admin-org-badge" id="admin-org-badge">Organization</div>
+      </div>
+
+      <!-- Admin KPI Stats -->
+      <div class="stats-grid" id="admin-stats-row" style="margin-bottom:20px">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(37,99,235,0.15);color:#3B82F6">👥</div>
+          <div class="stat-info">
+            <div class="stat-value" id="admin-stat-users">—</div>
+            <div class="stat-label">Total Users</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(16,185,129,0.15);color:#10B981">🚗</div>
+          <div class="stat-info">
+            <div class="stat-value" id="admin-stat-rides">—</div>
+            <div class="stat-label">Total Rides</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(245,158,11,0.15);color:#F59E0B">📍</div>
+          <div class="stat-info">
+            <div class="stat-value" id="admin-stat-trips">—</div>
+            <div class="stat-label">Total Trips</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(139,92,246,0.15);color:#8B5CF6">💰</div>
+          <div class="stat-info">
+            <div class="stat-value" id="admin-stat-revenue">—</div>
+            <div class="stat-label">Total Revenue</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="tab active" data-admin-tab="employees">Employees</button>
+        <button class="tab" data-admin-tab="vehicles">Vehicles</button>
+        <button class="tab" data-admin-tab="rides">Rides</button>
+        <button class="tab" data-admin-tab="org-settings">Org Settings</button>
+      </div>
+
+      <!-- Employees Tab -->
+      <div id="admin-tab-employees" class="admin-tab-content">
+        <div class="admin-toolbar">
+          <input type="text" id="emp-search" class="form-input" placeholder="Search employees..." style="max-width:280px" />
+          <button class="btn btn-primary btn-sm" id="add-employee-btn">+ Add Employee</button>
+        </div>
+        <div class="table-card">
+          <table class="data-table" id="employees-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Trips</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="employees-tbody">
+              <tr><td colspan="6" class="table-empty">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Vehicles Tab -->
+      <div id="admin-tab-vehicles" class="admin-tab-content hidden">
+        <div class="admin-toolbar">
+          <span style="font-size:14px;color:var(--text-secondary)">All registered vehicles in the organization</span>
+          <button class="btn btn-primary btn-sm" id="admin-add-vehicle-btn">+ Add Vehicle</button>
+        </div>
+        <div class="table-card">
+          <table class="data-table" id="admin-vehicles-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Reg. No.</th>
+                <th>Owner</th>
+                <th>Capacity</th>
+                <th>Trips</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-vehicles-tbody">
+              <tr><td colspan="6" class="table-empty">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Rides Tab -->
+      <div id="admin-tab-rides" class="admin-tab-content hidden">
+        <div class="table-card">
+          <table class="data-table" id="admin-rides-table">
+            <thead>
+              <tr>
+                <th>Route</th>
+                <th>Driver</th>
+                <th>Date</th>
+                <th>Passengers</th>
+                <th>Fare</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-rides-tbody">
+              <tr><td colspan="6" class="table-empty">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Org Settings Tab -->
+      <div id="admin-tab-org-settings" class="admin-tab-content hidden">
+        <div class="form-card">
+          <form id="org-settings-form">
+            <div class="form-group">
+              <label class="form-label">Organization Name</label>
+              <input type="text" id="org-name" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Domain (e.g. company.com)</label>
+              <input type="text" id="org-domain" class="form-input" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fuel Cost (₹/L)</label>
+              <input type="number" id="org-fuel-cost" class="form-input" value="100" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mileage (km/L)</label>
+              <input type="number" id="org-mileage" class="form-input" value="15" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Max Fare Per KM (₹)</label>
+              <input type="number" id="org-max-fare" class="form-input" value="10" />
+            </div>
+            <button type="submit" class="btn btn-primary">Save Settings</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────── CHAT ─────────────── -->
+    <div id="page-chat" class="page page-chat-layout">
+      <div class="chat-header">
+        <button class="back-btn" id="chat-back-btn">←</button>
+        <div class="chat-partner-info">
+          <div class="user-avatar sm" id="chat-partner-avatar">A</div>
+          <div>
+            <div class="chat-partner-name" id="chat-partner-name">Passenger</div>
+            <div class="chat-partner-status" id="chat-partner-status">In Trip</div>
+          </div>
+        </div>
+        <button class="icon-btn" id="chat-call-btn" title="Voice call">📞</button>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <!-- messages will be appended here -->
+      </div>
+      <div class="chat-input-bar">
+        <input type="text" id="chat-input" class="chat-input" placeholder="Type a message..." />
+        <button class="send-btn" id="chat-send-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ─────────────── TOAST NOTIFICATIONS ─────────────── -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- ─────────────── BOOKING CONFIRM MODAL ─────────────── -->
+<div id="booking-confirm-modal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Confirm Booking</h3>
+      <button class="modal-close" id="booking-modal-close">✕</button>
+    </div>
+    <div id="booking-confirm-details"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="booking-cancel-btn">Cancel</button>
+      <button class="btn btn-primary" id="booking-confirm-btn">Confirm Booking</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── CALL MODAL ─────────────── -->
+<div id="call-modal" class="modal-overlay hidden">
+  <div class="modal-card call-modal-card">
+    <div class="call-avatar" id="call-avatar">A</div>
+    <div class="call-name" id="call-name">Calling...</div>
+    <div class="call-status" id="call-status">Connecting</div>
+    <div class="call-actions">
+      <button class="call-btn call-mute" id="call-mute-btn">🔇</button>
+      <button class="call-btn call-end" id="call-end-btn">📵</button>
+      <button class="call-btn call-speaker" id="call-speaker-btn">🔊</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── ADD EMPLOYEE MODAL (Admin) ─────────────── -->
+<div id="add-employee-modal" class="modal-overlay hidden">
+  <div class="modal-card" style="max-width:480px">
+    <div class="modal-header">
+      <h3>Add Employee</h3>
+      <button class="modal-close" id="add-employee-modal-close">✕</button>
+    </div>
+    <form id="add-employee-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name *</label>
+          <input type="text" id="emp-fname" class="form-input" placeholder="First name" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name *</label>
+          <input type="text" id="emp-lname" class="form-input" placeholder="Last name" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        <input type="email" id="emp-email" class="form-input" placeholder="employee@company.com" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" id="emp-phone" class="form-input" placeholder="9876543210" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <select id="emp-role" class="form-input form-select">
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Temporary Password *</label>
+        <input type="text" id="emp-password" class="form-input" placeholder="Min 6 characters" value="carpool123" required />
+      </div>
+      <div id="add-employee-error" class="form-error hidden"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="add-employee-cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Employee</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ─────────────── ADD VEHICLE MODAL (Admin) ─────────────── -->
+<div id="admin-vehicle-modal" class="modal-overlay hidden">
+  <div class="modal-card" style="max-width:480px">
+    <div class="modal-header">
+      <h3 id="admin-vehicle-modal-title">Add Vehicle</h3>
+      <button class="modal-close" id="admin-vehicle-modal-close">✕</button>
+    </div>
+    <form id="admin-vehicle-form">
+      <input type="hidden" id="admin-vehicle-id-input" />
+      <div class="form-group">
+        <label class="form-label">Assign to Employee *</label>
+        <select id="admin-vehicle-owner" class="form-input form-select" required>
+          <option value="">Select employee...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Vehicle Make &amp; Model *</label>
+        <input type="text" id="admin-vehicle-model" class="form-input" placeholder="e.g. Honda City, Maruti Swift" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Registration Number *</label>
+        <input type="text" id="admin-vehicle-reg" class="form-input" placeholder="e.g. MH 01 AB 1234" required />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Seating Capacity</label>
+          <select id="admin-vehicle-capacity" class="form-input form-select">
+            <option value="2">2 Seats</option>
+            <option value="4" selected>4 Seats</option>
+            <option value="5">5 Seats</option>
+            <option value="6">6 Seats</option>
+            <option value="7">7 Seats</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Color</label>
+          <input type="text" id="admin-vehicle-color" class="form-input" placeholder="e.g. White" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Year</label>
+        <input type="number" id="admin-vehicle-year" class="form-input" placeholder="e.g. 2022" min="2000" max="2026" />
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="admin-vehicle-cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Vehicle</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Map Picker Modal -->
+<div id="map-picker-modal" class="modal-overlay hidden">
+  <div class="modal-content" style="width: 90%; max-width: 600px; height: 70vh; display: flex; flex-direction: column; padding: 0; background: var(--bg-card); border-radius: var(--radius-xl); overflow: hidden;">
+    <div class="modal-header" style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+      <h3 class="modal-title" style="margin: 0; color: var(--text-primary); font-family: var(--font-heading); font-weight: 600;">Pick Location</h3>
+      <button class="modal-close" id="map-picker-close" style="background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer;">✕</button>
+    </div>
+    <div style="flex: 1; position: relative; background: #222;">
+      <div id="map-picker-container" style="width: 100%; height: 100%;"></div>
+      <!-- Center Pin Overlay -->
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); pointer-events: none; z-index: 10; margin-top: 5px;">
+        <div style="position: relative; display: flex; flex-direction: column; align-items: center;">
+          <!-- Pin -->
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" style="filter: drop-shadow(0px 8px 6px rgba(0,0,0,0.4)); margin-bottom: -6px;">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="#3B82F6" stroke="white" stroke-width="1.5"></path>
+            <circle cx="12" cy="10" r="3" fill="white" stroke="none"></circle>
+          </svg>
+          <!-- Shadow -->
+          <div style="width: 12px; height: 4px; background: rgba(0,0,0,0.4); border-radius: 50%; filter: blur(2px);"></div>
+        </div>
+      </div>
+      <!-- Custom Zoom Controls -->
+      <div style="position: absolute; right: 20px; bottom: 80px; z-index: 10; display: flex; flex-direction: column; gap: 8px;">
+        <button id="map-picker-zoom-in" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); font-size: 24px; font-weight: bold; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); cursor: pointer; transition: transform 0.2s;">+</button>
+        <button id="map-picker-zoom-out" style="border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-md); font-size: 24px; font-weight: bold; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); cursor: pointer; transition: transform 0.2s;">-</button>
+      </div>
+      <button id="map-picker-current-location" style="position: absolute; bottom: 20px; right: 16px; z-index: 10; border-radius: 50%; width: 48px; height: 48px; padding: 0; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lg); font-size: 22px; background: var(--blue); color: white; border: none; cursor: pointer; transition: transform 0.2s;" title="My Location">📍</button>
+    </div>
+    <div class="modal-footer" style="padding: 16px; border-top: 1px solid var(--border); background: var(--bg-card);">
+      <div style="margin-bottom: 12px; font-size: 14px; color: var(--text-secondary); text-align: center; min-height: 20px;" id="map-picker-address">Pan map to select location...</div>
+      <button class="btn btn-primary" id="map-picker-confirm" style="width: 100%;">Select this location</button>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="js/api.js?v=5"></script>
+<script src="js/db.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/maps.js?v=5"></script>
+<script src="js/auth.js?v=3"></script>
+<script src="js/vehicle.js"></script>
+<script src="js/find-ride.js?v=4"></script>
+<script src="js/offer-ride.js?v=3"></script>
+<script src="js/trip.js?v=8"></script>
+<script src="js/tracking.js?v=3"></script>
+<script src="js/payment.js"></script>
+<script src="js/history.js?v=7"></script>
+<script src="js/reports.js?v=4"></script>
+<script src="js/settings.js?v=2"></script>
+<script src="js/admin.js?v=3"></script>
+<script src="js/chat.js?v=8"></script>
+<script src="js/app.js?v=14"></script>
+</body>
+</html>
